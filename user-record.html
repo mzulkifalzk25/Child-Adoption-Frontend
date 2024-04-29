@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<link
+		href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+		rel="stylesheet"
+	/>
+	<link rel="stylesheet" href="./style.css" />
+	<link rel="stylesheet" href="./tailwind.config.js" />
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<title>User Record</title>
+</head>
+
+<body>
+	<nav class="bg-white lg:px-0 px-4 shadow-md">
+		<div class="max-w-6xl mx-auto">
+			<div class="flex justify-between h-16 items-center">
+				<div class="flex items-center">
+					<span class="lg:w-full md:w-36 sm:w-24">
+						<img src="./images/logo.png" alt="Dream Craddle Logo" />
+					</span>
+				</div>
+
+				<!-- Mobile Toggle Icon -->
+				<div class="sm:hidden">
+					<button
+						type="button"
+						class="text-gray-800 hover:text-gray-600 focus:outline-none"
+					>
+						<svg
+							class="h-6 w-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6h16M4 12h16m-7 6h7"
+							></path>
+						</svg>
+					</button>
+				</div>
+				<div class="hidden sm:flex sm:items-center sm:justify-center">
+					<a
+						href="./index.html"
+						class="inline-flex font-extrabold items-center px-4 py-2 mr-2 text-sm text-gray-800 hover:text-gray-600"
+					>
+						Home
+					</a>
+					<a
+						href="./adopted-list.html"
+						class="inline-flex font-extrabold items-center px-4 py-2 mr-2 text-sm text-gray-800 hover:text-gray-600"
+					>
+						User Form
+					</a>
+					<a
+						href="./user-record.html"
+						class="inline-flex font-extrabold items-center px-4 py-2 mr-2 text-sm text-gray-800 hover:text-gray-600"
+					>
+						Adoption Form
+					</a>
+				</div>
+				<div class="lg:flex hidden items-center">
+					<button
+						type="button"
+						class="logout-btn inline-flex items-center px-4 py-2 mr-2 text-sm font-medium hover:bg-gray-400 rounded-lg focus:outline-none focus:bg-gray-400 transition duration-150 ease-in-out"
+					>
+						Logout
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Mobile Menu (hidden by default) -->
+		<div class="hidden sm:hidden">
+			<div class="px-2 pt-2 pb-3 space-y-1">
+				<a
+					href="./index.html"
+					class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-gray-600 hover:bg-gray-100"
+					>Home</a
+				>
+				<a
+					href="./user-record.html"
+					class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-gray-600 hover:bg-gray-100"
+					>User Form</a
+				>
+				<a
+					href="./children-list.html"
+					class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-gray-600 hover:bg-gray-100"
+					>Adoption Form</a
+				>
+				<!-- Logout Button in Mobile Menu -->
+				<button
+					type="button"
+					class="block w-full px-4 py-2 mt-1 text-left text-sm font-medium text-gray-800 bg-gray-300 hover:bg-gray-400 rounded-lg focus:outline-none focus:bg-gray-400 transition duration-150 ease-in-out"
+				>
+					Logout
+				</button>
+			</div>
+		</div>
+	</nav>
+
+	<div class="grid grid-cols-1 justify-between max-w-6xl mx-auto md:grid-cols-7 gap-4 mt-2">
+		<aside class="col-span-2 py-2 w-12/12">
+			<h3 class="text-xl py-4 flex items-center">
+				Filters
+				<img src="./images/filter.png" alt="Filter Icon" class="filters ml-2" />
+			</h3>
+			<div class="mb-4">
+				<span class="font-bold py-2">Status</span>
+				<table class="border-collapse border border-black">
+					<tr class="w-full">
+						<td class="border-t border-black px-2 py-2 w-64">
+							<label class="flex items-center justify-between">
+								<span class="ml-2">Approved</span>
+								<input
+									type="checkbox"
+									class="form-checkbox h-4 w-4 text-indigo-600"
+								/>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="border-t border-black px-2 py-2 w-64">
+							<label class="flex items-center justify-between">
+								<span class="ml-2">Waiting</span>
+								<input
+									type="checkbox"
+									class="form-checkbox h-4 w-4 text-indigo-600"
+								/>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="border-t border-black px-2 py-2 w-64">
+							<label class="flex items-center justify-between">
+								<span class="ml-2">Disapproved</span>
+								<input
+									type="checkbox"
+									class="form-checkbox h-4 w-4 text-indigo-600"
+								/>
+							</label>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</aside>
+
+		<div class="col-span-5 card-container container mx-auto py-8" id="cardContainer">
+			<div class="flex max-w-3xl justify-between items-center">
+				<div>
+					<h3 class="text-lg font-bold">User Record</h3>
+				</div>
+				<div class="flex border-2 mr-6 border-gray-400 rounded-full items-center search-container">
+                    <input id="searchInput" type="text" placeholder="Search..." class="outline-none border-none border px-4 py-2 rounded-full focus:outline-none search-input" />
+                    <button id="searchButton" class="mx-2 text-black rounded-lg search-button">
+                        <img src="./images/search.png" class="w-5 h-auto" alt="Search Icon">
+                    </button>
+                </div>
+			</div>
+
+			<!-- CHILDREN CARDS -->
+			<div class="my-4">
+				<div class="card flex space-x-4 items-center my-2 border-2 rounded border-gray-100 h-28 px-4">
+					<div class="">
+						<img src="./images/adopter-1.png" alt="Your Image" class="w-full md:w-24 lg:w-24 md:h-auto lg:h-auto object-contain" />
+					</div>
+					<div class="flex-1">
+						<p class="text-base">Name: Bilal Lashari</p>
+						<p class="text-base">Email: bilal@gmail.com</p>
+						<p class="text-base">
+							Status: <span class="bg-green-400 p-1">Approved</span>
+						</p>
+					</div>
+					<div class=" flex justify-end md:justify-start">
+						<button id="openModalBtn" class="px-4 py-2 user-from-btn text-white rounded-lg hover:bg-blue-300 mr-2 md:mr-0"> <!-- Updated -->
+							User Form
+						</button>
+					</div>
+				</div>
+
+				<div class="card flex space-x-4 items-center my-2 border-2 rounded border-gray-100 h-28 px-4">
+					<div class="">
+						<img src="./images/adopter-2.png" alt="Your Image" class="w-full md:w-24 lg:w-24 md:h-auto lg:h-auto object-contain" />
+					</div>
+					<div class="flex-1">
+						<p class="text-base">Name: Mr.Moin</p>
+						<p class="text-base">Email: moin@gmai.com</p>
+						<p class="text-base">
+							Status: <span class="bg-yellow-400 p-1">Waiting</span>
+						</p>
+					</div>
+					<div class=" flex justify-end md:justify-start">
+						<button id="openModalBtn" class="px-4 py-2 user-from-btn text-white rounded-lg hover:bg-blue-300 mr-2 md:mr-0"> <!-- Updated -->
+							User Form
+						</button>
+					</div>
+				</div>
+
+				<div class="card flex space-x-4 items-center my-2 border-2 rounded border-gray-100 h-28 px-4">
+					<div class="">
+						<img src="./images/adopter-3.png" alt="Your Image" class="card-img w-full md:w-24 lg:w-24 md:h-auto lg:h-auto object-contain" />
+					</div>
+					<div class="flex-1">
+						<p class="text-base">Name: David Warner</p>
+						<p class="text-base">Email: david@gmail.com</p>
+						<p class="text-base">
+							Status: <span class="bg-red-400 p-1">Request</span>
+						</p>
+					</div>
+					<div class=" flex justify-end md:justify-start">
+						<button id="openModalBtn" class="px-4 py-2 user-from-btn text-white rounded-lg hover:bg-blue-300 mr-2 md:mr-0"> <!-- Updated -->
+							User Form
+						</button>
+					</div>
+				</div>
+
+				<div class="card flex space-x-4 items-center my-2 border-2 rounded border-gray-100 h-28 px-4">
+					<div class="">
+						<img src="./images/adopter-4.png" alt="Your Image" class="w-full md:w-24 lg:w-24 md:h-auto lg:h-auto object-contain" />
+					</div>
+					<div class="flex-1">
+						<p class="text-base">Name: Pat Cummins</p>
+						<p class="text-base">Email: pat@gmail.com</p>
+						<p class="text-base">
+							Status: <span class="bg-green-400 p-1">Adopted</span>
+						</p>
+					</div>
+					<div class=" flex justify-end md:justify-start">
+						<button id="openModalBtn" class="px-4 py-2 user-from-btn text-white rounded-lg hover:bg-blue-300 mr-2 md:mr-0"> <!-- Updated -->
+							User Form
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer class="text-white py-4 text-center">
+		<span class="">© Copyright 2024, DreamCradle Adoption | All Rights Reserved.</span>
+	</footer>
+
+	<!-- Modal -->
+	<div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+		<div class="bg-white p-8 rounded-lg">
+			<h2 class="flex justify-between items-center px-2 bg-black text-white text-xl font-bold mb-4 text-center">
+                <span>User Form</span>
+                <div class="flex items-center space-x-4">
+                    <button id="closeModal" class="flex justify-center items-center p-2">
+                        <img class="w-8" src="./images/x.png" alt="Close Icon">
+                    </button>
+                </div>
+            </h2>
+
+            <div class="">
+                <form class="my-2">
+                    <div class="flex flex-wrap -mx-3 mb-2">
+                        <div class="px-3 md:mb-0">
+                            <input
+                                class="appearance-none block w-full text-black border border-black p-2 
+                                leading-tight focus:outline-none focus:bg-white"
+                                id="grid-first-name"
+                                type="text"
+                                placeholder="First Name"
+                            />
+                        </div>
+                        <div class="w-full md:w-1/2 px-3">
+                            <input
+                                class="appearance-none block w-full text-black border border-black p-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                id="grid-last-name"
+                                type="text"
+                                placeholder="Last Name"
+                            />
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap -mx-3 mb-2">
+                        <div class="w-full px-3">
+                            <input
+                                class="appearance-none block w-full text-black border border-black p-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                id="grid-address"
+                                type="address"
+                                placeholder="Street Address"
+                            />
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap -mx-3 mb-2">
+                        <div class="w-full px-3">
+                            <input
+                                class="appearance-none block w-full text-black border border-black p-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                id="grid-address"
+                                type="address"
+                                placeholder="Street Address Line 2"
+                            />
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap -mx-3 mb-2">
+                        <div class="px-3 md:mb-0">
+                            <input
+                                class="appearance-none block w-full text-black border border-black p-2 
+                                leading-tight focus:outline-none focus:bg-white"
+                                id="grid-first-name"
+                                type="text"
+                                placeholder="Lahore"
+                            />
+                        </div>
+                        <div class="w-full md:w-1/2 px-3">
+                            <input
+                                class="appearance-none block w-full text-black border border-black p-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                id="grid-last-name"
+                                type="text"
+                                placeholder="+92315648655"
+                            />
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap -mx-3 mb-2">
+                        <div class="w-full px-3">
+                            <input
+                                class="appearance-none block w-full text-black border border-black p-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                id="grid-email"
+                                type="email"
+                                placeholder="email@gmail.com"
+                            />
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap -mx-3 mb-2">
+                        <div class="px-3 md:mb-0">
+                            <input
+                                class="appearance-none block w-full text-black border border-black p-2 
+                                leading-tight focus:outline-none focus:bg-white"
+                                id="grid-first-name"
+                                type="text"
+                                placeholder="Pakistan"
+                            />
+                        </div>
+                        <div class="w-full md:w-1/2 px-3">
+                            <input
+                                class="appearance-none block w-full text-black border border-black p-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                id="grid-last-name"
+                                type="text"
+                                placeholder="+9254436545156"
+                            />
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap -mx-3 mb-2">
+                        <div class="px-3 md:mb-0">
+                            <input
+                                class="appearance-none block w-full text-black border border-black p-2 
+                                leading-tight focus:outline-none focus:bg-white"
+                                id="grid-first-name"
+                                type="text"
+                                placeholder="2155-9551-4815"
+                            />
+                        </div>
+                        <div class="w-full md:w-1/2 px-3">
+                            <input
+                                class="appearance-none block w-full text-black border border-black p-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                id="grid-last-name"
+                                type="text"
+                                placeholder="50005"
+                            />
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap -mx-3 mb-2">
+                        <div class="px-3 md:mb-0">
+                            <input
+                                class="appearance-none block w-full text-black border border-black p-2 
+                                leading-tight focus:outline-none focus:bg-white"
+                                id="grid-first-name"
+                                type="text"
+                                placeholder="Bsc. Software Engineer"
+                            />
+                        </div>
+                        <div class="w-full md:w-1/2 px-3">
+                            <input
+                                class="appearance-none block w-full text-black border border-black p-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                id="grid-last-name"
+                                type="text"
+                                placeholder="5 Years"
+                            />
+                        </div>
+                    </div>
+                    <div class="flex justify-end">
+                        <button class="approve-btn rounded w-24 mx-2 p-2">Approve</button>
+                        <button class="decline-btn rounded w-24 mx-2 p-2">Decline</button>
+                    </div>
+                </form>
+            </div>
+		</div>
+	</div>
+
+    <!-- 
+            <div class="flex flex-wrap -mx-3 mb-2">
+                <div class="w-full px-3">
+                    <input
+                        class="appearance-none block w-full text-black border border-black py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        id="grid-address"
+                        type="address"
+                        placeholder="Street Address"
+                    />
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-2">
+                <div class="w-full px-3">
+                    <input
+                        class="appearance-none block w-full text-black border border-black py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        id="grid-address"
+                        type="address"
+                        placeholder="Street Address Line 2"
+                    />
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-2">
+                <div class="w-full md:w-1/2 px-3 mb-2 md:mb-0">
+                    <input
+                        class="appearance-none block w-full text-black border border-black py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                        id="grid-first-name"
+                        type="text"
+                        placeholder="City"
+                    />
+                </div>
+                <div class="w-full md:w-1/2 px-3">
+                    <input
+                        class="appearance-none block w-full text-black border border-black py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        id="grid-last-name"
+                        type="text"
+                        placeholder="Zip Code"
+                    />
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-2">
+                <div class="w-full px-3">
+                    <input
+                        class="appearance-none block w-full text-black border border-black py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        id="grid-"
+                        type=""
+                        placeholder="Email"
+                    />
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-2">
+                <div class="w-full md:w-1/2 px-3 mb-2 md:mb-0">
+                    <input
+                        class="appearance-none block w-full text-black border border-black py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                        id="grid-first-name"
+                        type="text"
+                        placeholder="Nationality"
+                    />
+                </div>
+                <div class="w-full md:w-1/2 px-3">
+                    <input
+                        class="appearance-none block w-full text-black border border-black py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        id="grid-last-name"
+                        type="text"
+                        placeholder="Cell Phone"
+                    />
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-2">
+                <div class="w-full md:w-1/2 px-3 mb-2 md:mb-0">
+                    <input
+                        class="appearance-none block w-full text-black border border-black py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                        id="grid-first-name"
+                        type="text"
+                        placeholder="CNIC"
+                    />
+                </div>
+                <div class="w-full md:w-1/2 px-3">
+                    <input
+                        class="appearance-none block w-full text-black border border-black py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        id="grid-last-name"
+                        type="text"
+                        placeholder="Monthly Income"
+                    />
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-2">
+                <div class="w-full md:w-1/2 px-3 mb-2 md:mb-0">
+                    <input
+                        class="appearance-none block w-full text-black border border-black py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                        id="grid-first-name"
+                        type="text"
+                        placeholder="Qualification"
+                    />
+                </div>
+                <div class="w-full md:w-1/2 px-3">
+                    <input
+                        class="appearance-none block w-full text-black border border-black py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        id="grid-last-name"
+                        type="text"
+                        placeholder="Marriage Perid"
+                    />
+                </div>
+            </div>
+            <div class="flex justify-center">
+                <div class="flex flex-col mx-3 mb-2">
+                    <label for="nic" class="mb-3">NIC:</label>
+                    <div class="w-full mb-2 md:mb-0">
+                        <input 
+                            class="appearance-none block w-full text-black border border-black py-3 px-4 leading-tight focus:outline-none focus:bg-white"
+                            id="nic"
+                            type="file"
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-col mx-3 mb-2">
+                    <label for="nic" class="mb-3">Degree Certificate:</label>
+                    <div class="w-full mb-2 md:mb-0">
+                        <input 
+                            class="appearance-none block w-full text-black border border-black py-3 px-4 leading-tight focus:outline-none focus:bg-white"
+                            id="nic"
+                            type="file"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-center">
+                <div class="flex flex-col mx-3 mb-2">
+                    <label for="nic" class="mb-3">Marrige Certificate:</label>
+                    <div class="w-full mb-2 md:mb-0">
+                        <input 
+                            class="appearance-none block w-full text-black border border-black py-3 px-4 leading-tight focus:outline-none focus:bg-white"
+                            id="nic"
+                            type="file"
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-col mx-3 mb-2">
+                    <label for="nic" class="mb-3">Criminal Record Certificate:</label>
+                    <div class="w-full mb-2 md:mb-0">
+                        <input 
+                            class="appearance-none block w-full text-black border border-black py-3 px-4 leading-tight focus:outline-none focus:bg-white"
+                            id="nic"
+                            type="file"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-start">
+                <div class="mx-3 mb-2">
+                    <label for="nic" class="block mb-3">Family Registration Applicant:</label>
+                    <input 
+                        class="appearance-none block text-black border border-black py-3 px-4 leading-tight focus:outline-none focus:bg-white"
+                        id="nic"
+                        type="file"
+                    />
+                </div>
+            </div>
+            <div class="flex justify-start">
+                <div class="mx-3 mb-2">
+                    <label for="nic" class="block mb-3">Bank Statement of 6 Months (if available):</label>
+                    <input 
+                        class="appearance-none block text-black border border-black py-3 px-4 leading-tight focus:outline-none focus:bg-white"
+                        id="nic"
+                        type="file"
+                    />
+                </div>
+            </div>
+            <div class="flex justify-center my-2">
+                <button 
+                    class="text-white form-btn font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" 
+                    type="button">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div> -->
+
+	<script>
+		const modal = document.getElementById("modal");
+		const openModalBtn = document.getElementById("openModalBtn");
+		const closeModalBtn = document.getElementById("closeModal");
+
+		openModalBtn.addEventListener("click", function () {
+			modal.classList.remove("hidden");
+		});
+
+		closeModalBtn.addEventListener("click", function () {
+			modal.classList.add("hidden");
+		});
+	</script>
+
+	<script>
+		const printBtn = document.getElementById("printBtn");
+		printBtn.addEventListener("click", function () {
+			window.print();
+		});
+
+		const downloadBtn = document.getElementById("downloadBtn");
+		downloadBtn.addEventListener("click", function () {
+			const name = document.querySelector(".modal-name").textContent.trim();
+			const address = document.querySelector(".modal-address").textContent.trim();
+			const cityState = document.querySelector(".modal-city-state").textContent.trim();
+			const zipCode = document.querySelector(".modal-zip-code").textContent.trim();
+			const contactNo = document.querySelector(".modal-contact-no").textContent.trim();
+			const email = document.querySelector(".modal-email").textContent.trim();
+			const nationality = document.querySelector(".modal-nationality").textContent.trim();
+			const occupation = document.querySelector(".modal-occupation").textContent.trim();
+
+			const data =
+				`Name: ${name}\n` +
+				`Address: ${address}\n` +
+				`City/State: ${cityState}\n` +
+				`Zip Code: ${zipCode}\n` +
+				`Contact No: ${contactNo}\n` +
+				`Email: ${email}\n` +
+				`Nationality: ${nationality}\n` +
+				`Occupation: ${occupation}`;
+
+			const blob = new Blob([data], { type: "text/plain" });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "adopter_information.txt";
+
+			document.body.appendChild(a);
+			a.click();
+
+			window.URL.revokeObjectURL(url);
+			document.body.removeChild(a);
+		});
+
+	</script>
+
+	<script>
+		const toggleButton = document.querySelector("nav button");
+		const mobileMenu = document.querySelector("nav .hidden.sm\\:hidden");
+
+		toggleButton.addEventListener("click", () => {
+			mobileMenu.classList.toggle("hidden");
+		});
+	</script>
+</body>
+</html>
